@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include<math.h>
+#include <windows.h>
+
+/* retorna "a - b" en segundos */
+double performancecounter_diff(LARGE_INTEGER *a, LARGE_INTEGER *b)
+{
+  LARGE_INTEGER freq;
+  QueryPerformanceFrequency(&freq);
+  return (double)(a->QuadPart - b->QuadPart) / (double)freq.QuadPart;
+}
+
+int main(int argc, char *argv[])
+{
+  LARGE_INTEGER t_ini, t_fin;
+  double secs;
+
+int cont,numero;
+printf("Ingrese un numero entero para descomponer en factores primos:");
+scanf("%d",&numero);
+
+  QueryPerformanceCounter(&t_ini);
+
+if (numero<0) //valida que el número ingresado no sea negativo.
+{
+printf("%d no es valido.\n",numero);
+}
+if (numero==1) //arregla el detalle de que todos los números son divisibles por 1
+{
+printf("1 es primo.\n");
+}
+else
+{
+
+while (numero!=1)//Cuando el resultado es 1 termina de descomponer
+{
+for (cont=2;cont<=numero;cont+=1)//realiza la división por todos los números menores
+{
+if (numero%cont==0)//Si una división tiene resto cero imprime
+{
+printf("%d\t|%d\n",numero,cont);
+numero=numero/cont;//Cambia por el resultado de la división de resto cero
+break;
+}
+}
+}
+printf("%d\t|\n",numero);
+}
+  QueryPerformanceCounter(&t_fin);
+
+  secs = performancecounter_diff(&t_fin, &t_ini);
+  printf("%.16g milliseconds\n", secs * 1000.0);
+  return 0;
+}
